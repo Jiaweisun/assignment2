@@ -2,6 +2,7 @@ function mapinit()
 {
 	var img = document.getElementById('map');
 var msg = document.getElementById('msg');
+
 navigator.geolocation.getCurrentPosition(
   function(position){
     var latitude  = position.coords.latitude;
@@ -14,7 +15,7 @@ navigator.geolocation.getCurrentPosition(
     img.src = 
       "http://maps.google.com/maps/api/staticmap?sensor=true&"+
       "center="+latitude+","+longitude+
-      "&zoom=14&size=300x200&markers=color:red|"+
+      "&zoom=10&size=1200x500&markers=color:red|"+
       latitude+","+longitude;
   },
   function(error){

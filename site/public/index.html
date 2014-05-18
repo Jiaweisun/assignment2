@@ -1,26 +1,62 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>JAIWEI SUN</title>
-		<meta name="viewport"
-		content="user-scalable=no,initial-scale=1.0,maximum-scale=1.0" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css" />
-		<link rel="stylesheet" href="./css/bb.css" />
-		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
-		<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
-		<script src="./js/underscore.js"></script>
-		<script src="./js/backbone.js"></script>
-		<!--script src="./js/backbone.localStorage.js"></script-->
-		<script src="./js/iscroll.js"></script>
-		<script src="./js/assignment.js"></script>
-		<script src="./js/location.js"></script>
+  <head>
+    <title>JAIWEI SUN</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">
+<script src="http://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.js"></script>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+  </head>
+   <script src="./js/underscore.js"></script>
+    <script src="./js/backbone.js"></script>
+    <!--script src="./js/backbone.localStorage.js"></script-->
+    <!--script src="./js/iscroll.js"></script-->
+    <!--script src="./js/assignment.js"></script-->
+    <script src="./js/location.js"></script>
+  <body>
 
-		
-	
-	</head>
 
-	<body>
+  <div data-role="page" id="mainPage">
+       <!--Login Panel -->
+    <div data-role="panel" id="loginPanel">
+      <h2> Login </h2>
+      <form>
+        username: <input type="text" value=""/>
+        password: <input type="password" value=""/>
+        <a herf="mainPage" data-rel="close" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-tbn-a ui-icon-login ui-btn-icon-left">Login</a>
+      </form>
+    </div>
+
+    <div data-role="header">
+      <a href="#restaurantPage" class="ui-btn ui-corner-all ui-shadow ui-icon-login ui-btn-icon-left">Login</a><!--loginPanel -->
+      <h1>Welcome To My Homepage</h1>
+    </div>
+
+    <div data-role="main" class="ui-content">
+      <p>Notice that we have added the CSS class of "ui-corner-all" and "ui-shadow" to the header buttons, to make them look a bit more desirable.</p>
+    </div>
+  </div>
+
+<!-- Login Page-->
+
+  <div data-role="page" id="restaurantPage">
+    <div data-role="header">
+      <a href="#loginPanel" class="ui-btn ui-corner-all ui-shadow ui-icon-login ui-btn-icon-left">Login</a>
+      <h1>Nearby Restaurants</h1>
+    </div>
+
+    <div data-role="main" class="ui-content">
+     
+     
+    </div>
+  </div>
+
+  <div>
+            <img id="map"/>
+          <p id="msg"></p>
+    </div>
+
 <div id="fb-root"></div>
 <script>(function(d, s, id) {
   var js, fjs = d.getElementsByTagName(s)[0];
@@ -30,9 +66,45 @@
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 
-<div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-type="button_count"></div>
 
-<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
-	</body>
+
+<div class="fb-share-button" data-href="https://developers.facebook.com/docs/plugins/" data-type="button_count"></div>
+<a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
+
+    
+          <img id="map"/>
+          <p id="msg"></p>
+          <script>
+var img = document.getElementById('map');
+var msg = document.getElementById('msg');
+navigator.geolocation.getCurrentPosition(
+  function(position){
+    var latitude  = position.coords.latitude;
+    var longitude = position.coords.longitude;
+    var timestamp = new Date(position.timestamp);
+    msg.innerHTML = 
+      'Latitude:  '+latitude+'<br />'+
+      'Longitude: '+longitude+'<br />'+
+      'Timestamp: '+timestamp;
+    img.src = 
+      "http://maps.google.com/maps/api/staticmap?sensor=true&"+
+      "center="+latitude+","+longitude+
+      "&zoom=14&size=300x200&markers=color:red|"+
+      latitude+","+longitude;
+  },
+  function(error){
+    var txt;
+    switch(error.code) {
+      case error.PERMISSION_DENIED:    txt = 'Permission denied'; break;
+      case error.POSITION_UNAVAILABLE: txt = 'Position unavailable'; break;
+      case error.TIMEOUT:              txt = 'Position lookup timed out'; break;
+      default: txt = 'Unknown position.'
+    }
+    msg.innerHTML = txt;
+  }
+);
+</script>
+  </body>
 </html>
+	<body>
