@@ -1,5 +1,5 @@
-// Create our global collection of **Companies**.
-var Companies = new CompanyList();
+// Create our global collection of **Restaurants**.
+var Restaurants = new RestaurantList();
 
 //---------------------------------------
 // The Application
@@ -31,7 +31,7 @@ var AppView = Backbone.View.extend({
        self.main.fadeIn();
       });
 
-      self.companies_holder.fadeOut();
+      self.restaurants_holder.fadeOut();
 
       //controls to switch back to map
       self.controls.hide().css({top: (top - 100) + 'px'});
@@ -56,7 +56,7 @@ var AppView = Backbone.View.extend({
       //hide controls
       self.controls.hide();
 
-      self.companies_holder.fadeIn();
+      self.restaurants_holder.fadeIn();
 
       //resize map canvas. make map 100%
       self.map_canvas.animate({height: '100%'}, speed);
@@ -72,7 +72,7 @@ var AppView = Backbone.View.extend({
     // Initialize map
     //--------------------------------------
     _initialize_map : function(){
-      var center = new google.maps.LatLng(41.63, -1);
+      var center = new google.maps.LatLng(52.246066,-7.139858,17);//52.246066,-7.139858,17////41.63, -1
       var styles = [
         {
           elementType: "geometry",
@@ -84,7 +84,7 @@ var AppView = Backbone.View.extend({
       ];
 
       var mapOptions = {
-          zoom: 9,
+          zoom: 11,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           center: center,
           styles: styles
@@ -108,7 +108,7 @@ var AppView = Backbone.View.extend({
       self.map_controls = $('#map_controls');
       self.map_canvas = $('#map_canvas');
       self.header = $('header');
-      self.companies_holder = $('#companies_holder');
+      self.restaurants_holder = $('#restaurants_holder');
 
       //initialize map
       self._initialize_map();
@@ -133,9 +133,15 @@ var AppView = Backbone.View.extend({
       // Fetch (with delay)
       //--------------------------------------
       setTimeout(function(){ //delay markers popp
-        Companies.fetch();
+        Restaurants.fetch();
         //create views
-        var list_view = new CompanyListView({model: Companies, map: self.map});
+        // alert("self.map"+self.map);
+        Restaurants.add_new(dummy_data_generator.get_dummy_restaurant(self.map));
+        var list_view = new RestaurantListView({model: Restaurants, map: self.map});
+
+        
+
+        // var restaurant= new Restaurant
       }, 2000);
     }
 });

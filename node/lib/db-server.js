@@ -53,11 +53,11 @@ function init() {
   server.use( connect.static( __dirname + '/../../site/public') )
 
 api.connect({
- name: 'assignment1',
+ name: 'assignment2',
 server:'oceanic.mongohq.com',
-port: 10040,
+port: 10011,
 username:'jiawei',
-password:'mwdass1'
+password:'123456'
 },
 function(err,db_client){
   if(err) return console.log(err);

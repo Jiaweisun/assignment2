@@ -44,6 +44,13 @@ function initialize() {
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
+      /***
+      **
+      **
+      **Add the results into restaurantlist
+      **
+      **
+      **/
       createMarker(results[i]);
     }
   }
@@ -54,15 +61,14 @@ function createMarker(place) {
   var placeLoc = place.geometry.location;
   var marker = new google.maps.Marker({
     map: map,
-    position: place.geometry.location
+    position: place.geometry.location,
+    animation: google.maps.Animation.DROP,
+    icon : './img/restaurant-blue-icon.png'
   });
 
   google.maps.event.addListener(marker, 'click', function() {
     infowindow.setContent(place.name);
     infowindow.open(map, this);
-    // infowindow.addListener(marker,'click',function(){
-    //   alert("restaurant page");
-    // });
   });
 }
 
