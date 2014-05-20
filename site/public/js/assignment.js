@@ -10,8 +10,7 @@ var Restaurant = Backbone.Model.extend({
           pos: 'init position',
   },
   initialize: function() { },
-
-  localStorage: new Store("company-cachirulo"),
+  url: '/api/rest/todo',
 
   clear: function() {
     this.destroy();
@@ -28,7 +27,8 @@ var RestaurantList = Backbone.Collection.extend({
   // Reference to this collection's model.
   model: Restaurant,
 
-  localStorage: new Store("company-cachirulo"),
+  // localStorage: new Store("company-cachirulo"),
+  url: '/api/rest/todo',
 
   add_new: function(restaurant){
     this.create(restaurant);
