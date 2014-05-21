@@ -4,9 +4,9 @@ var common=require('./common')
 var uuid=common.uuid
 var mongodb=common.mongodb
 
-var todocoll=null
+var restaurantItem=null//todocoll
 var util={}
-util.validate=function(input){return input.text}
+util.validate=function(input){return input.name}
 util.fixid=function(doc){
 	if(doc._id){
 		doc.id=doc._id.toString()
@@ -33,11 +33,13 @@ exports.rest={
     if( !util.validate(input) ) {
       return res.send$(400, 'invalid')
     }
-    var todo = {
-      text: input.text,
+    var restaurant = {
+      name: input.name,//only text
+      address: input.address,
+      position: input.position,
       created: new Date().getTime(),
     }
-    todocoll.insert(todo,res.err$(function(docs){
+    restaurantItem.insert(restaurant,res.err$(function(docs){
       res.sendjson$(util.fixid(docs[0]))
     }))
  
@@ -47,7 +49,7 @@ exports.rest={
 	var input = req.params
    	 console.log(req.params)
     var query = util.fixid( {id:input.id} )
-    todocoll.findOne( query, res.err$( function( doc ) {
+    restaurantItem.findOne( query, res.err$( function( doc ) {
       if( doc ) {
         var output = util.fixid( doc )
         res.sendjson$( output )
@@ -58,16 +60,16 @@ exports.rest={
     }))
 	},
 	list:function(req,res){
-var input = req.query
+    var input = req.query
     var output = []
     var query   = {}
     var options = {sort:[['created','desc']]}
 
-    todocoll.find( query, options, res.err$( function( cursor ) {
+    restaurantItem.find( query, options, res.err$( function( cursor ) {
       cursor.toArray( res.err$( function( docs ) {
         output = docs
-        output.forEach(function(item){
-          util.fixid(item)
+        output.forEach(function(restaurant){//item
+          util.fixid(restaurant)
         })
         res.sendjson$( output )
       }))
@@ -81,7 +83,7 @@ var input = req.query
       return res.send$(400, 'invalid')
     }
     var query = util.fixid( {id:id} )
-    todocoll.update( query, {$set:{text:input.text}}, {w:1},res.err$( function( count ) {
+    restaurantItem.update( query, {$set:{name:input.name}}, {w:1},res.err$( function( count ) {
       if( 0 < count ) {
         var output = util.fixid( input )
         res.sendjson$( output )
@@ -95,7 +97,7 @@ var input = req.query
 	del:function(req,res){
 		var input = req.params
     var query = util.fixid( {id:input.id} )
-    todocoll.remove( query, res.err$( function() {
+    restaurantItem.remove( query, res.err$( function() {
       var output = {}
       res.sendjson$( output )
     }))
@@ -118,9 +120,9 @@ options.port = options.port || 27017
 
 			if(err) return callback(err);
 			callback(null,client);
-      client.collection('item',function(err,collection){
+      client.collection('restaurant',function(err,collection){
         if(err) return callback(err);
-          todocoll=collection
+          restaurantItem=collection
   
     })
 		})

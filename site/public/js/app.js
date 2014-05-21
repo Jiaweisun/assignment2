@@ -84,10 +84,17 @@ var AppView = Backbone.View.extend({
       ];
 
       var mapOptions = {
-          zoom: 11,
+          zoom: 13,
           mapTypeId: google.maps.MapTypeId.ROADMAP,
           center: center,
           styles: styles
+          // mapTypeControlOptions: { 
+          // style: google.maps.MapTypeControlStyle.DROPDOWN_MENU
+          // }, 
+          // zoomControl: true, 
+          //   zoomControlOptions: { 
+          //     style: google.maps.ZoomControlStyle.SMALL
+          // }
       };
       this.map = new google.maps.Map(document.getElementById('map_canvas'),
         mapOptions);
@@ -129,14 +136,14 @@ var AppView = Backbone.View.extend({
         self.map_controls.fadeIn();
       }, 1000);
 
+       initRestaurant(self.map);
+
       //--------------------------------------
       // Fetch (with delay)
       //--------------------------------------
       setTimeout(function(){ //delay markers popp
         Restaurants.fetch();
         //create views
-        // alert("self.map"+self.map);
-        Restaurants.add_new(dummy_data_generator.get_dummy_restaurant(self.map));
         var list_view = new RestaurantListView({model: Restaurants, map: self.map});
 
         
@@ -151,3 +158,38 @@ var App = null;
 $(function(){
   App = new AppView();
 });
+
+/**
+**
+**
+**main page to load nearby restaurants from google map api
+**
+*/
+function initRestaurant(map)
+{
+  var callback=function(results, status){
+          var list_view=$("#list");
+            for (var i = 0; i < results.length; i++) {
+              var temp=results[i];
+                var item=$("<li><a href='#'>"+temp.name+"</a></li>");
+
+                list_view.append(item);
+            }
+            list_view.listview('refresh');
+      }
+    getGoogleRestaurant(this, map,callback);
+}
+
+ function getGoogleRestaurant(self, map, callback)
+ {
+   //todo get current location
+    var request = {
+      location: new google.maps.LatLng(52.246066,-7.139858,17),
+      radius: 5000,
+      types: ['restaurant']
+    };
+    var service = new google.maps.places.PlacesService(map);
+
+    service.nearbySearch(request, $.proxy(callback,self));
+
+ }

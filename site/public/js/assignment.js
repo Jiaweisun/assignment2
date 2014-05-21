@@ -3,13 +3,16 @@
 //---------------------------------------
 var Restaurant = Backbone.Model.extend({
   defaults:{
-
           company_id : 'init',
+         // text:'',
           name: 'init name',
           address: 'init address',
           pos: 'init position',
   },
-  initialize: function() { },
+  initialize: function() { 
+    var self = this;
+      _.bindAll(self);
+  },
   url: '/api/rest/todo',
 
   clear: function() {
@@ -34,7 +37,7 @@ var RestaurantList = Backbone.Collection.extend({
     this.create(restaurant);
   },
 
-  // Companies are sorted by their name
+  // restaurants are sorted by their name
   comparator: function(restaurant) {
     return restaurant.get('name');
   },
@@ -83,8 +86,27 @@ var RestaurantListView = Backbone.View.extend({
         alert('limited to 15!');
         return;
       }
-      var restaurant= dummy_data_generator.get_dummy_restaurant(this.map);
-      this.model.add_new(restaurant);
+      var restaurant;
+      //dummy_data_generator.get_dummy_restaurant(restaurant,this.map);
+      getGoogleRestaurant(this,this.map, function(results, status){
+            for (var i = 0; i < results.length; i++) {
+              var temp=results[i];
+              var restaurant = new Restaurant({
+                        company_id : temp.id,
+                       // text:'',
+                        name: temp.name,
+                        address: 'init address',
+                        pos: temp.geometry.location,
+                });
+              
+              console.log( temp.geometry.location)
+              this.model.add_new(restaurant);
+            }
+
+      });
+
+      //console.log(restaurant);
+      //this.model.add_new(restaurant);
     },
 
     //event handler for "delete all companies" action
@@ -111,6 +133,28 @@ var RestaurantListView = Backbone.View.extend({
       // alert("list view render method");
       this.model.each (this.added_restaurant, this);
     }
+
+    // render : function() {
+    //   var self = this;
+    //   self.$el.empty();
+    //   self.items.each(function(item) {
+    //     self.appenditem(item);
+    //   });
+    //   self.input = self.$('.edit');
+    //   console.log(self.input);
+    // },
+    // appenditem : function(item) {
+    //   var self = this;
+    //   var itemview = new bb.view.Item({
+    //     model : item
+    //   });
+    //   self.$el.append(itemview.$el.html());
+  
+    //   $("#list").listview('refresh');
+    //   self.scroll();
+
+    // }
+
 });
 
 
@@ -196,14 +240,15 @@ var RestaurantMarkerView = Backbone.View.extend({
       self.map = options.map;
 
       var pos = self.model.get('pos');
+      var name = self.model.get('name');
 
-      // alert("restaurant.pos.lat  :::::"+pos);
+     console.log("restaurant.pos.lat  :::::"+  name);
       self.marker = new google.maps.Marker({
           map: self.map,
-          position: new google.maps.LatLng(pos.lat, pos.lng),
+          position: new google.maps.LatLng(pos.k, pos.A),
           animation: google.maps.Animation.DROP,
           icon : './img/restaurant-blue-icon.png',
-          title: self.model.name,
+          title: name,
           descr : self.model.get('descr'),
           id : self.model.get('company_id')
       });
@@ -243,12 +288,24 @@ var RestaurantMarkerView = Backbone.View.extend({
     }
 });
 
-
-/*****
-*data-generate
+/**
 *
-*****/
+*get nearby restaurants 
+*/
+ function getGoogleRestaurant(self, map, callback)
+ {
 
+   //todo get current location
+    var request = {
+      location: new google.maps.LatLng(52.246066,-7.139858,17),
+      radius: 5000,
+      types: ['restaurant']
+    };
+    var service = new google.maps.places.PlacesService(map);
+
+    service.nearbySearch(request, $.proxy(callback,self));
+
+ }
 
 // var dummy_data_generator = {
 
@@ -256,16 +313,31 @@ var RestaurantMarkerView = Backbone.View.extend({
 //     Restaurants.remove_all();
 //   },
 
-//   'get_dummy_restaurant': function(){
-//     var rnd_id = (new Date).getTime();
-//     var restaurant = {
-//       company_id : rnd_id,
-//       name : Faker.Company.companyName(),
-//       address: Faker.Address.streetAddress(),
-//       pos: {lat: 41 + Math.random(), lon: -1.3 + Math.random()}
-//     };
+//   'get_dummy_restaurant': function(restaurant,map){
+//     // alert("mapmapmapmapmapmapmap::::"+map);
+   
+//   //alert("begin..... restaurant model.....");
 
-//     restaurant.descr = '<div>'+
+  
+//   var request = {
+//       location: new google.maps.LatLng(52.246066,-7.139858,17),
+//       radius: 5000,
+//       types: ['restaurant']
+//     };
+//     var service = new google.maps.places.PlacesService(map);
+    
+//      service.nearbySearch(request, function(results, status)
+//       {
+//         //alert("status"+status);
+
+//         if (status == google.maps.places.PlacesServiceStatus.OK) {
+//           // alert("result.length"+results.length);
+//            //  restaurants=results;
+//             // console.log(restaurants);
+//             for (var i = 0; i < results.length; i++) {
+//               restaurant = results[i];
+//               console.log(restaurant);
+//               restaurant.descr = '<div>'+
 //     '<div>'+
 //     '</div>'+
 //     '<h2>' + restaurant.name + ' <small>' + restaurant.address +  '</small></h2>'+
@@ -276,90 +348,36 @@ var RestaurantMarkerView = Backbone.View.extend({
 //     '<p>' + Faker.Lorem.paragraph() + '</p>' +
 //     '</div>'+
 //     '</div>';
+//          }
+//        }
+//       });
+//      // alert("restaurant.name"+restaurant.name);
+      
+//     // alert(" result mmmmmmmmmmmmmmmmm...."+restaurant+",,,,,name: "+restaurant.name);
 
+//  console.log(restaurant);
 //     return restaurant;
-//   },
-
-//   'repopulate' : function(){
-//     Restaurants.remove_all();
-//     for (var i = 0, l = 10; i < l ;  i++) {
-//       Restaurants.add_new(this.get_dummy_restaurant());
-//     }
-//   }
-// };
-
-// dummy_data_generator.repopulate();
-
-/**
-**
-*
-**
-**/
- var restaurant= new Restaurant();
-
-var dummy_data_generator = {
-
-  'reset' : function (){
-    Restaurants.remove_all();
-  },
-
-  'get_dummy_restaurant': function(map){
-    // alert("mapmapmapmapmapmapmap::::"+map);
-   
-  // alert("begin..... restaurant model.....");
-
-
-  var request = {
-      location: new google.maps.LatLng(52.246066,-7.139858,17),
-      radius: 5000,
-      types: ['restaurant']
-    };
-    var service = new google.maps.places.PlacesService(map);
-    // alert("service or not:: : "+service);
-     service.nearbySearch(request, function(results, status)
-      {
-        // alert("status"+status);
-        if (status == google.maps.places.PlacesServiceStatus.OK) {
-          // alert("result.length"+results.length);
-            for (var i = 0; i < results.length; i++) {
-       restaurant= results[i];
-         }
-       }
-      });
-     // alert("restaurant.name"+restaurant.name);
-      restaurant.descr = '<div>'+
-    '<div>'+
-    '</div>'+
-    '<h2>' + restaurant.name + ' <small>' + restaurant.address +  '</small></h2>'+
-    '<div>'+
-    '<img style="width:200px;height:200px;float:left;margin:5px 10px 5px 0px" src="http://lorempixel.com/200/200/" />' +
-    '<p>' + Faker.Lorem.paragraph() + '</p>' +
-    '<p>' + Faker.Lorem.paragraph() + '</p>' +
-    '<p>' + Faker.Lorem.paragraph() + '</p>' +
-    '</div>'+
-    '</div>';
-    // alert(" result mmmmmmmmmmmmmmmmm...."+restaurant+",,,,,name: "+restaurant.name);
-    return restaurant;
       
 
-   // alert("restaurant:"+restaurant);
-    // var restaurant = {
-    //   company_id : rnd_id,
-    //   name : Faker.Company.companyName(),
-    //   address: Faker.Address.streetAddress(),
-    //   pos: {lat: 41 + Math.random(), lon: -1.3 + Math.random()}
-    // };
+//    // alert("restaurant:"+restaurant);
+//     // var restaurant = {
+//     //   company_id : rnd_id,
+//     //   name : Faker.Company.companyName(),
+//     //   address: Faker.Address.streetAddress(),
+//     //   pos: {lat: 41 + Math.random(), lon: -1.3 + Math.random()}
+//     // };
 
     
-  },
+//   },
 
-  'repopulate' : function(map){
-    // Restaurants.remove_all();
-   // for (var i = 0, l = 10; i < l ;  i++) {
-      RestaurantList.add_new(this.get_dummy_restaurant(map));
-    //}
-  }
-};
+//   'repopulate' : function(restaurant,map){
+//     Restaurants.remove_all();
+//    // for (var i = 0, l = 10; i < l ;  i++) {
+
+//       RestaurantList.add_new(this.get_dummy_restaurant(restaurant,map));
+//     //}
+//   }
+// };
 
 //dummy_data_generator.repopulate();
 
