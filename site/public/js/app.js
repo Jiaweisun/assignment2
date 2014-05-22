@@ -21,6 +21,16 @@ var AppView = Backbone.View.extend({
     //--------------------------------------
     // Show content event: triggered when user wants the "content" mode
     //--------------------------------------
+    show_description:function()
+    {
+      var self = this;
+      self.restaurants_holder.fadeOut();
+    },
+    show_restaurants:function()
+    {
+      var self=this;
+      self.restaurants_holder.fadeIn();
+    },
     // show_content: function (){
     //   var self = this;
     //   var top = 200;

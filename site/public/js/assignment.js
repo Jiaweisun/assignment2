@@ -178,7 +178,7 @@ var RestaurantListItemView = Backbone.View.extend({
   //----------------------------------
   events: {
     'mouseover a': 'show_restaurant_info',
-    'mouseout a': 'hide_restaurant_info',
+    //'mouseout a': 'hide_restaurant_info',
     'click button': 'ask_delete_restaurant',
     'click a.delete': 'delete_restaurant',
     //'click a.detail': 'show_restaurant_detail',
@@ -190,13 +190,12 @@ var RestaurantListItemView = Backbone.View.extend({
 
   //show marker bubble
   show_restaurant_info : function(){
-    console.log("mouse over");
+    App.show_description();
     this.marker_view.show_restaurant_info.call(this.marker_view.marker);
   },
 
   //hide marker bubble
   hide_restaurant_info : function(){
-    console.log("mouse out");
     this.marker_view.hide_restaurant_info.call(this.marker_view.marker);
   },
 
@@ -262,7 +261,7 @@ var RestaurantMarkerView = Backbone.View.extend({
       });
 
       google.maps.event.addListener(self.marker, 'mouseover', self.show_restaurant_info);
-      google.maps.event.addListener(self.marker, 'mouseout', self.hide_restaurant_info);
+     // google.maps.event.addListener(self.marker, 'mouseout', self.hide_restaurant_info);
       google.maps.event.addListener(self.marker, 'click', self.show_restaurant_detail);
     },
 
@@ -282,6 +281,8 @@ var RestaurantMarkerView = Backbone.View.extend({
     show_restaurant_info : function(){
       this.setIcon('./img/restaurant-blue-icon.png');
       this.infowindow.open(this.map, this);
+      if(this.infowindow.close)
+        App.show_restaurants();
     },
 
     render: function() { },
