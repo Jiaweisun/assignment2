@@ -4,13 +4,13 @@
 	User can share it to facebook or twitter if like. Such as:
 	![ScreenShot](wireframes.png)
 
-<hr>
+
 2.API
 
-<hr>
+
 3. Usecase<br>
 	in this part, there are five roles which include user, facebook sdk, twitter sdk, google api server, and amazon ec2. such as:
 	![ScreenShot](usecase.png)
 
-<hr>
+
 4. Architectural Diagrams

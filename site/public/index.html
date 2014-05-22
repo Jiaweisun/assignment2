@@ -26,24 +26,14 @@
 </head>
 <body>
 
-<!--map -->
-
-   <!--div id="map-canvas"></div-->
-
 <!--main page-->
    <div data-role="page" id="mainPage">
        <!--Login Panel -->
-    <div data-role="panel" id="loginPanel">
-      <h2> Login </h2>
-      <form>
-        username: <input type="text" value=""/>
-        password: <input type="password" value=""/>
-        <a herf="mainPage" data-rel="close" class="ui-btn ui-btn-inline ui-shadow ui-corner-all ui-tbn-a ui-icon-user ui-btn-icon-left">Login</a>
-      </form>
-      
+    <div data-role="panel" id="loginPanel">    
        <!-- facebook login-->
        <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
         </fb:login-button>
+        <hr>
         <div id="status"> </div>
     </div>
 
@@ -54,24 +44,16 @@
     </div>
 
    <div data-role="main" class="ui-content">
-    <div id="restaurants_list"><ul id="list" data-role="listview"></ul></div>
-    <!--ul id="list" data-role="listview">
-
-      <a href="#" class="ui-btn ui-corner-all ui-icon-arrow-r ui-btn-icon-right">Pizza Hut Delivery Waterford 
-     <div
+    <div
           class="fb-like"
           data-send="true"
           data-width="450"
           data-show-faces="true">
       </div>
       <a href="https://twitter.com/share" class="twitter-share-button">Tweet</a>
-    </a>
-    <a href="#" class="ui-btn ui-corner-all ui-icon-arrow-r ui-btn-icon-right">Jade Palace restaurant</a>
-    <a href="#" class="ui-btn ui-corner-all ui-icon-arrow-r ui-btn-icon-right">Limeleaf Restaurant</a>
-    <a href="#" class="ui-btn ui-corner-all ui-icon-arrow-r ui-btn-icon-right">Chiang Mai Thai</a> 
-    <a href="#" class="ui-btn ui-corner-all ui-icon-arrow-r ui-btn-icon-right">The Munster Bar</a> 
-    <a href="#" class="ui-btn ui-corner-all ui-icon-arrow-r ui-btn-icon-right">Happy Garden</a>
-  </ul-->
+    <div id="restaurants_list"><ul id="list" data-role="listview" data-filter="true" data-filter-placeholder="Search restaurant..." data-inset="true">
+      
+    </ul></div>    
     </div>
   </div>
 
@@ -79,28 +61,28 @@
 
 <!-- page two map -->
 <div id="hub" class="">
-    <header>
+    <!--header>
       <a href="#mainPage" class="ui-btn"><i class="icon-backward"></i>Back</a>
-    </header>
+    </header-->
 
-    <div class="nav_controls" id="map_controls">
+    <!--div class="nav_controls" id="map_controls">
       <button id="btn_content" class="btn btn-large btn-warning">Show content</button>
-    </div>
+    </div-->
 
-    <div id="restaurants_holder">
-      <button id="btn_pop_new_restaurant" class="btn"><i class="icon-plus"></i> New Restaurant</button>
+    <div id="restaurants_holder" style="top: 20px; display: block;width: 298px;">
+      <button id="btn_pop_new_restaurant" class="btn"><i class="icon-plus"></i> Add Restaurant</button>
       <button id="btn_delete_all_restaurants" class="btn btn-danger"><i class="icon-remove icon-white"></i> Remove them all</button>
 
       <div id="restaurants_list_holder"><ul></ul></div>
     </div>
 
-    <div class="nav_controls" id="content_controls">
+    <!--div class="nav_controls" id="content_controls">
       <button id="btn_map" class="btn btn-large btn-warning">Show map</button>
-    </div>
+    </div-->
 
   </div>
 
-  <section id="main">
+  <!--section id="main">
     <div class=row-fluid>
       <div class="span4">
         <h2>Lorem ipsum y más lorem (ole!)</h2>
@@ -118,7 +100,7 @@
 
       <div class="span8">
 
-      <div id="company_details_holder">
+      <div id="restaurant_details_holder">
 
       <h2>Content here</h2>
       <form class="form-horizontal well">
@@ -210,7 +192,7 @@
       </form>
       </div>
     </div>
-  </section>
+  </section-->
 
 
 <link rel="stylesheet" href="http://code.jquery.com/mobile/1.4.2/jquery.mobile-1.4.2.min.css">

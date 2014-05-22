@@ -3,11 +3,12 @@
 //---------------------------------------
 var Restaurant = Backbone.Model.extend({
   defaults:{
-          company_id : 'init',
+          restaurant_id : 'init',
          // text:'',
           name: 'init name',
           address: 'init address',
           pos: 'init position',
+          descr:'init description'
   },
   initialize: function() { 
     var self = this;
@@ -43,9 +44,9 @@ var RestaurantList = Backbone.Collection.extend({
   },
   remove_all: function (){
     var model;
-    while (model = this.pop()){
+    _.each(_.clone(Restaurants.models), function(model) {
       model.destroy();
-    }
+    });
   }
 });
 
@@ -80,45 +81,46 @@ var RestaurantListView = Backbone.View.extend({
       'click #btn_delete_all_restaurants' : 'delete_all_restaurants'
     },
 
-    //event handler for "new company" action
+    //event handler for "new restaurant" action
     popup_new_restaurant: function (map){
-      if (Restaurants.length>15){
-        alert('limited to 15!');
-        return;
+      if (Restaurants.length>0){
+        Restaurants.remove_all();
       }
       var restaurant;
-      //dummy_data_generator.get_dummy_restaurant(restaurant,this.map);
       getGoogleRestaurant(this,this.map, function(results, status){
             for (var i = 0; i < results.length; i++) {
               var temp=results[i];
               var restaurant = new Restaurant({
-                        company_id : temp.id,
-                       // text:'',
-                        name: temp.name,
-                        address: 'init address',
-                        pos: temp.geometry.location,
+                  restaurant_id : temp.id,
+                  name: temp.name,
+                  address: 'init address',
+                  pos: temp.geometry.location,
+                  descr : '<div>'+
+                          '<div>'+
+                          '</div>'+
+                          '<h2>' + temp.name + ' <small>' + temp.name +  '</small></h2>'+
+                          '<div>'+
+                          '<img style="width:200px;height:200px;float:left;margin:5px 10px 5px 0px" src="http://lorempixel.com/200/200/" />' +
+                          '<p>' + Faker.Lorem.paragraph() + '</p>' +
+                          '<p>' + Faker.Lorem.paragraph() + '</p>' +
+                          '<p>' + Faker.Lorem.paragraph() + '</p>' +
+                          '</div>'+
+                          '</div>'
                 });
-              
-              console.log( temp.geometry.location)
+               // restaurant.
+              // console.log( temp.geometry.location)
               this.model.add_new(restaurant);
             }
 
       });
-
-      //console.log(restaurant);
-      //this.model.add_new(restaurant);
     },
 
-    //event handler for "delete all companies" action
+    //event handler for "delete all restaurants" action
     delete_all_restaurants: function (){
       Restaurants.remove_all();
     },
-    //----------------------------------
-    // END Events and event handlers
-    //----------------------------------
-
     //---------------------------------------
-    // If a new company is added, create the proper views and render
+    // If a new restaurant is added, create the proper views and render
     //---------------------------------------
     added_restaurant : function (restaurant){
       var marker_view = new RestaurantMarkerView({ model: restaurant, map: this.map });
@@ -179,7 +181,7 @@ var RestaurantListItemView = Backbone.View.extend({
     'mouseout a': 'hide_restaurant_info',
     'click button': 'ask_delete_restaurant',
     'click a.delete': 'delete_restaurant',
-    'click a.detail': 'show_restaurant_detail'
+    //'click a.detail': 'show_restaurant_detail',
   },
 
   show_restaurant_detail : function(){
@@ -188,11 +190,13 @@ var RestaurantListItemView = Backbone.View.extend({
 
   //show marker bubble
   show_restaurant_info : function(){
+    console.log("mouse over");
     this.marker_view.show_restaurant_info.call(this.marker_view.marker);
   },
 
   //hide marker bubble
   hide_restaurant_info : function(){
+    console.log("mouse out");
     this.marker_view.hide_restaurant_info.call(this.marker_view.marker);
   },
 
@@ -211,7 +215,7 @@ var RestaurantListItemView = Backbone.View.extend({
   //----------------------------------
 
   render: function() {
-    this.$el.html('<li><a class="detail" href="#" company_id="' + this.model.get('company_id') + '">' + this.model.get('name') + '</a> <button class="close">x</button> <a href="#" style="display:none" class="close delete">confirm</a></li>');
+    this.$el.html('<li><a class="detail" href="#" restaurant_id="' + this.model.get('restaurant_id') + '">' + this.model.get('name') + '</a> <button class="close">x</button> <a href="#" style="display:none" class="close delete">confirm</a></li>');
     return this;
   },
 
@@ -297,7 +301,7 @@ var RestaurantMarkerView = Backbone.View.extend({
 
    //todo get current location
     var request = {
-      location: new google.maps.LatLng(52.246066,-7.139858,17),
+      location: new google.maps.LatLng(52.246066,-7.139858),
       radius: 5000,
       types: ['restaurant']
     };
@@ -306,81 +310,6 @@ var RestaurantMarkerView = Backbone.View.extend({
     service.nearbySearch(request, $.proxy(callback,self));
 
  }
-
-// var dummy_data_generator = {
-
-//   'reset' : function (){
-//     Restaurants.remove_all();
-//   },
-
-//   'get_dummy_restaurant': function(restaurant,map){
-//     // alert("mapmapmapmapmapmapmap::::"+map);
-   
-//   //alert("begin..... restaurant model.....");
-
-  
-//   var request = {
-//       location: new google.maps.LatLng(52.246066,-7.139858,17),
-//       radius: 5000,
-//       types: ['restaurant']
-//     };
-//     var service = new google.maps.places.PlacesService(map);
-    
-//      service.nearbySearch(request, function(results, status)
-//       {
-//         //alert("status"+status);
-
-//         if (status == google.maps.places.PlacesServiceStatus.OK) {
-//           // alert("result.length"+results.length);
-//            //  restaurants=results;
-//             // console.log(restaurants);
-//             for (var i = 0; i < results.length; i++) {
-//               restaurant = results[i];
-//               console.log(restaurant);
-//               restaurant.descr = '<div>'+
-//     '<div>'+
-//     '</div>'+
-//     '<h2>' + restaurant.name + ' <small>' + restaurant.address +  '</small></h2>'+
-//     '<div>'+
-//     '<img style="width:200px;height:200px;float:left;margin:5px 10px 5px 0px" src="http://lorempixel.com/200/200/" />' +
-//     '<p>' + Faker.Lorem.paragraph() + '</p>' +
-//     '<p>' + Faker.Lorem.paragraph() + '</p>' +
-//     '<p>' + Faker.Lorem.paragraph() + '</p>' +
-//     '</div>'+
-//     '</div>';
-//          }
-//        }
-//       });
-//      // alert("restaurant.name"+restaurant.name);
-      
-//     // alert(" result mmmmmmmmmmmmmmmmm...."+restaurant+",,,,,name: "+restaurant.name);
-
-//  console.log(restaurant);
-//     return restaurant;
-      
-
-//    // alert("restaurant:"+restaurant);
-//     // var restaurant = {
-//     //   company_id : rnd_id,
-//     //   name : Faker.Company.companyName(),
-//     //   address: Faker.Address.streetAddress(),
-//     //   pos: {lat: 41 + Math.random(), lon: -1.3 + Math.random()}
-//     // };
-
-    
-//   },
-
-//   'repopulate' : function(restaurant,map){
-//     Restaurants.remove_all();
-//    // for (var i = 0, l = 10; i < l ;  i++) {
-
-//       RestaurantList.add_new(this.get_dummy_restaurant(restaurant,map));
-//     //}
-//   }
-// };
-
-//dummy_data_generator.repopulate();
-
-var Restaurants = new RestaurantList();
+//var Restaurants = new RestaurantList();
 
 
