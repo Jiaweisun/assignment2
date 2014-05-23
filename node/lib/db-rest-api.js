@@ -14,6 +14,7 @@ util.fixid=function(doc){
 	}else if(doc.id){
     console.log(new mongodb.ObjectID(doc.id));
 		doc._id=new mongodb.ObjectID(doc.id)
+    console.log(doc._id);
 		delete doc.id
 	}return doc
 }
@@ -34,6 +35,7 @@ exports.rest={
       return res.send$(400, 'invalid')
     }
     var restaurant = {
+      restaurant_id:input.restaurant_id,
       name: input.name,//only text
       address: input.address,
       position: input.position,
@@ -96,7 +98,7 @@ exports.rest={
 	},
 	del:function(req,res){
 		var input = req.params
-    var query = util.fixid( {id:input.id} )
+    var query = util.fixid( {id:input.restaurant_id} )
     restaurantItem.remove( query, res.err$( function() {
       var output = {}
       res.sendjson$( output )

@@ -135,35 +135,13 @@ var RestaurantListView = Backbone.View.extend({
       // alert("list view render method");
       this.model.each (this.added_restaurant, this);
     }
-
-    // render : function() {
-    //   var self = this;
-    //   self.$el.empty();
-    //   self.items.each(function(item) {
-    //     self.appenditem(item);
-    //   });
-    //   self.input = self.$('.edit');
-    //   console.log(self.input);
-    // },
-    // appenditem : function(item) {
-    //   var self = this;
-    //   var itemview = new bb.view.Item({
-    //     model : item
-    //   });
-    //   self.$el.append(itemview.$el.html());
-  
-    //   $("#list").listview('refresh');
-    //   self.scroll();
-
-    // }
-
 });
 
 
 //---------------------------------------
-// Company List Item View(list item)
+// Restaurant List Item View(list item)
 // --------------
-// The DOM element for an item in a list of company items...
+// The DOM element for an item in a list of restaurant items...
 //---------------------------------------
 var RestaurantListItemView = Backbone.View.extend({
 
@@ -177,16 +155,16 @@ var RestaurantListItemView = Backbone.View.extend({
   // Events and event handlers
   //----------------------------------
   events: {
-    'mouseover a': 'show_restaurant_info',
-    //'mouseout a': 'hide_restaurant_info',
+    //'mouseover a': 'show_restaurant_info',
+    'mouseout a': 'hide_restaurant_info',
     'click button': 'ask_delete_restaurant',
     'click a.delete': 'delete_restaurant',
-    //'click a.detail': 'show_restaurant_detail',
+    'click a.detail': 'show_restaurant_info',//'show_restaurant_detail',
   },
 
-  show_restaurant_detail : function(){
-    App.show_content();
-  },
+  // show_restaurant_detail : function(){
+  //   App.show_content();
+  // },
 
   //show marker bubble
   show_restaurant_info : function(){
@@ -245,7 +223,7 @@ var RestaurantMarkerView = Backbone.View.extend({
       var pos = self.model.get('pos');
       var name = self.model.get('name');
 
-     console.log("restaurant.pos.lat  :::::"+  name);
+     // console.log("restaurant.pos.lat  :::::"+  name);
       self.marker = new google.maps.Marker({
           map: self.map,
           position: new google.maps.LatLng(pos.k, pos.A),
@@ -261,7 +239,7 @@ var RestaurantMarkerView = Backbone.View.extend({
       });
 
       google.maps.event.addListener(self.marker, 'mouseover', self.show_restaurant_info);
-     // google.maps.event.addListener(self.marker, 'mouseout', self.hide_restaurant_info);
+      google.maps.event.addListener(self.marker, 'mouseout', self.hide_restaurant_info);
       google.maps.event.addListener(self.marker, 'click', self.show_restaurant_detail);
     },
 
@@ -281,8 +259,6 @@ var RestaurantMarkerView = Backbone.View.extend({
     show_restaurant_info : function(){
       this.setIcon('./img/restaurant-blue-icon.png');
       this.infowindow.open(this.map, this);
-      if(this.infowindow.close)
-        App.show_restaurants();
     },
 
     render: function() { },
