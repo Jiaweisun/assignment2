@@ -140,10 +140,6 @@ var AppView = Backbone.View.extend({
         Restaurants.fetch();
         //create views
         var list_view = new RestaurantListView({model: Restaurants, map: self.map});
-
-        
-
-        // var restaurant= new Restaurant
       }, 2000);
     }
 });
