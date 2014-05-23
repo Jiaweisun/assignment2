@@ -167,7 +167,7 @@ function initRestaurant(map)
             for (var i = 0; i < results.length; i++) {
               var temp=results[i];
               console.log("temp"+results[i]);
-                var item=$("<li><a href='#'>"+temp.name+"</a></li>");//<img src='"+temp.icon+"'>
+                var item=$("<li><a href='#map_canvas'>"+temp.name+"</a></li>");//<img src='"+temp.icon+"'>
 
                 list_view.append(item);
             }

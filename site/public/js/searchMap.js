@@ -3,7 +3,6 @@ var infowindow;
 var  pyrmont;
 
 function showPosition(position){
-  alert("postion "+postion);
   pyrmont = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);  
 }
 
@@ -38,19 +37,10 @@ function initialize() {
   service.nearbySearch(request, callback);
 }
 
-
-
-
 function callback(results, status) {
   if (status == google.maps.places.PlacesServiceStatus.OK) {
     for (var i = 0; i < results.length; i++) {
-      /***
-      **
-      **
-      **Add the results into restaurantlist
-      **
-      **
-      **/
+      
       createMarker(results[i]);
     }
   }

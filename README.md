@@ -6,7 +6,8 @@
 
 
 2.API
-
+	In server side, mongohq.com is this app's cloud database, the database name is 'assignment2', the name of collection is 'restaurant', db-server.js show more configure information and create, list, read one, and delete method are being created in db-rest-api.js and being tested through postman and this app.<br>
+	however, the main of this app is to location user's current position and get nearby restaurants within 5000m from Google API, therefore, restaurants will be recorded into mongodb, and user could manage them. for example: delete or read. In this app, all of data are deny to update.
 
 3. Usecase<br>
 	in this part, there are five roles which include user, facebook sdk, twitter sdk, google api server, and amazon ec2. such as:
